@@ -29,8 +29,15 @@ public class IndexView {
                 footer;
     }
 
-    public String getHeader(String header) {
-        return getHtml("headerPartial");
+    public String getHeader(String userName) {
+        String html = getHtml("headerPartial");
+        if (userName.length() > 0) {
+            html = conditionalTextDelete(html, "usernameNotLogin")
+                    .replace("<!--###username###-->", userName);;
+        } else {
+            html = conditionalTextDelete(html, "usernameLoginedIn");
+        }
+        return html;
     }
 
     public String getFooter(String footer) {
@@ -57,10 +64,26 @@ public class IndexView {
                 strb.append(line).append("\n");
             }
         }
-          catch (IOException e) {
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         return strb.toString();
+    }
+
+    private String conditionalTextDelete(String html, String markToDelete) {
+        String startMarker = "<!--Variable ###" + markToDelete + "###-->";
+        String endMarker = "<!--endVariable-->";
+        int startIndex = html.indexOf(startMarker);
+        if (startIndex == -1) {
+            return html;
+        }
+        int endIndex = html.indexOf(endMarker, startIndex);
+        if (endIndex == -1) {
+            return html;
+        }
+        String firstPart = html.substring(0, startIndex);
+        String endPart = html.substring(endIndex + endMarker.length());
+        return firstPart + endPart;
     }
 }

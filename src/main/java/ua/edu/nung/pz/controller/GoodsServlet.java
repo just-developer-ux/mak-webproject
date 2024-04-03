@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.edu.nung.pz.dao.entity.Good;
+import ua.edu.nung.pz.dao.entity.Price;
 import ua.edu.nung.pz.dao.repository.GoodRepository;
+import ua.edu.nung.pz.dao.repository.PriceRepository;
 import ua.edu.nung.pz.view.MainPage;
 
 import java.io.IOException;
@@ -37,15 +39,24 @@ public class GoodsServlet extends HttpServlet {
 //        }
 
         GoodRepository goodRepository = new GoodRepository();
-        ArrayList<Good>  goods = goodRepository.getAll();
+        ArrayList<Good> goods = goodRepository.getAll();
+
+        PriceRepository priceRepository = new PriceRepository();
+        ArrayList<Price> prices = priceRepository.getAll();
 
         String body = goods.stream().map(good -> {
+            Price price = prices.stream()
+                    .filter(p -> p.getGood_id() == good.getId())
+                    .findFirst()
+                    .orElse(null);
+
             return "<div class=\"col-12 col-sm-6 col-lg-4 col-xl-3 my-2\">" +
                     "<div class=\"card\" style=\"width: 18rem;\">\n" +
                     "  <div class=\"card-body\">\n" +
                     "    <h5 class=\"card-title\">" + good.getName() + "</h5>\n" +
                     "    <h6 class=\"card-subtitle mb-2 text-body-secondary\">Card subtitle</h6>\n" +
                     "    <p class=\"card-text\">" + good.getDescription() + "</p>\n" +
+                    "    <p class=\"price-text\">" + price.getFor_client() + " ₴ </p>\n" +
                     "    <a href=\"#\" class=\"card-link\">Card link</a>\n" +
                     "    <a href=\"#\" class=\"card-link\">Another link</a>\n" +
                     "  </div>\n" +

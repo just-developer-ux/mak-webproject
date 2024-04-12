@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class PriceRepository {
+    /*
     public ArrayList<Price> getAll() {
         DataSource dataSource = new DataSource();
         ArrayList<Price> prices = new ArrayList<>();
@@ -39,4 +40,5 @@ public class PriceRepository {
 
         return prices;
     }
+     */
 }
